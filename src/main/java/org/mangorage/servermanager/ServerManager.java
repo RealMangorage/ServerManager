@@ -1,9 +1,10 @@
 package org.mangorage.servermanager;
 
-import org.mangorage.servermanager.configurations.IServerManager;
-import org.mangorage.servermanager.configurations.LazyProcess;
+import org.mangorage.servermanager.core.IServerManager;
+import org.mangorage.servermanager.core.process.LazyProcess;
 import org.mangorage.servermanager.gui.ServerManagerGUI;
 
+import java.io.File;
 import java.util.HashSet;
 
 /*
@@ -15,29 +16,26 @@ import java.util.HashSet;
 
 
 public class ServerManager {
-    private static final HashSet<LazyProcess> PROCESSES = new HashSet<>();
     private static IServerManager serverManager;
 
-
-    public static void registerProcess(LazyProcess process) {
-        PROCESSES.add(process);
+    public static IServerManager getServerManager() {
+        return serverManager;
     }
 
-    public static boolean isRegistered(LazyProcess process) {
-        return PROCESSES.contains(process);
-    }
 
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Forcibly stopping all registered Processes.");
-            PROCESSES.forEach(LazyProcess::forceStopProcess);
+            serverManager.quit();
         }));
 
         // setup server Manager variable
         serverManager = new ServerManagerGUI();
-        PROCESSES.forEach(process -> serverManager.registerProcess(process));
         serverManager.init();
-        serverManager.registerProcess(LazyProcess.MAIN);
+
+        var builder = new ProcessBuilder().directory(new File("E:\\server")).command("java -jar server.jar".split(" "));
+        var lp = new LazyProcess(builder, "Server");
+        serverManager.registerProcess(lp);
     }
 }

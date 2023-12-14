@@ -1,11 +1,41 @@
 package org.mangorage.servermanager.gui;
 
-import org.mangorage.servermanager.configurations.IServerManager;
-import org.mangorage.servermanager.configurations.LazyProcess;
+import org.mangorage.servermanager.core.IServerManager;
+import org.mangorage.servermanager.core.process.LazyProcess;
+import org.mangorage.servermanager.utils.FireableArrayList;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.event.ActionEvent;
 
 public class ServerManagerGUI extends JFrame implements IServerManager {
+    private final FireableArrayList<LazyProcess> PROCESSES = new FireableArrayList<>();
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler4;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private ButtonList jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JTextArea outputTextArea;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea5;
+    private javax.swing.JTextArea jTextArea6;
+    private javax.swing.JTextField jTextField1;
+
+    private LazyProcess selected = null;
 
     /**
      * Creates new form NewJFrame
@@ -24,12 +54,12 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new ButtonList();
+        jList1 = new ButtonList(PROCESSES);
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        outputTextArea = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -54,23 +84,22 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
         jScrollPane1.setViewportView(jList1);
 
         jButton1.setLabel("Start");
+        jButton1.addActionListener(this::startServer);
 
         jButton2.setLabel("Stop");
+        jButton2.addActionListener(this::stopServer);
 
         jButton3.setLabel("Clear");
+        jButton3.addActionListener(this::clearOutput);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        outputTextArea.setColumns(20);
+        outputTextArea.setRows(5);
+        jScrollPane2.setViewportView(outputTextArea);
 
         jLabel1.setText("Output Stream for X");
 
-        jButton6.setLabel("Save");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
+        jButton6.setLabel("Delete");
+        jButton6.addActionListener(this::deleteServer);
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
@@ -78,26 +107,25 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
 
         jLabel2.setText("Name");
 
-        jLabel5.setText("Name");
+        jLabel5.setText("Directory");
 
         jTextArea5.setColumns(20);
         jTextArea5.setRows(5);
         jScrollPane6.setViewportView(jTextArea5);
 
-        jLabel6.setText("Name");
+        jLabel6.setText("Startup args");
 
         jTextArea6.setColumns(20);
         jTextArea6.setRows(5);
         jScrollPane7.setViewportView(jTextArea6);
 
-        jButton4.setText("Other");
+        jButton4.setText("Save");
+        jButton4.addActionListener(this::saveConfig);
 
-        jButton7.setText("Button");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
+        jButton7.setText("Clear");
+        jButton7.addActionListener(this::clearConfig);
+
+        jList1.addListSelectionListener(this::listUpdate);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,42 +224,45 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
                                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         pack();
     }
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+    private void clearConfig(ActionEvent actionEvent) {
     }
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+    private void saveConfig(ActionEvent actionEvent) {
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
-    private javax.swing.Box.Filler filler4;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private ButtonList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea5;
-    private javax.swing.JTextArea jTextArea6;
-    private javax.swing.JTextField jTextField1;
+    private void deleteServer(ActionEvent actionEvent) {
+    }
+
+    private void clearOutput(ActionEvent actionEvent) {
+        outputTextArea.setText("");
+    }
+
+    private void stopServer(ActionEvent actionEvent) {
+        if (selected == null) return;
+        selected.forceStopProcess();
+    }
+
+    private void startServer(ActionEvent actionEvent) {
+        if (selected == null) return;
+        selected.start();
+    }
+
+    private void listUpdate(ListSelectionEvent e) {
+        if (e.getSource() instanceof ButtonList buttonList) {
+            var lp = buttonList.getSelectedValue();
+            selected = lp;
+            outputTextArea.setText("");
+            lp.hookOutput(s -> {
+                if (!outputTextArea.getText().isEmpty()) outputTextArea.setText(outputTextArea.getText() + "\n" + s);
+                if (outputTextArea.getText().isEmpty()) outputTextArea.setText(s);
+            });
+        }
+    }
 
     @Override
     public void registerProcess(LazyProcess process) {
@@ -247,10 +278,12 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
     public void init() {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                if ("CDE/Motif".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
+
+                System.out.println(info.getName());
             }
         } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException |
                  InstantiationException ex) {
@@ -258,5 +291,10 @@ public class ServerManagerGUI extends JFrame implements IServerManager {
         }
         setVisible(true);
     }
-    // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void quit() {
+        PROCESSES.forEach(LazyProcess::forceStopProcess);
+    }
+
 }
