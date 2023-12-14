@@ -12,15 +12,18 @@ import java.io.InputStreamReader;
  */
 
 public class LazyProcess extends Thread {
+    public static final LazyProcess MAIN = new LazyProcess(null, "TEST");
     private final ProcessBuilder processBuilder;
     private final String id;
-
     private Process runningProcess;
 
     public LazyProcess(ProcessBuilder builder, String id) {
         this.processBuilder = builder;
         this.id = id;
-        builder.inheritIO();
+    }
+
+    public String getProcessID() {
+        return id;
     }
 
     @Override

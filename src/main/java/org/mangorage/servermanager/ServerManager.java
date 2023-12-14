@@ -1,24 +1,22 @@
 package org.mangorage.servermanager;
 
+import org.mangorage.servermanager.configurations.IServerManager;
 import org.mangorage.servermanager.configurations.LazyProcess;
-import org.mangorage.servermanager.gui.MyWindow;
+import org.mangorage.servermanager.gui.ServerManagerGUI;
 
-import java.io.File;
 import java.util.HashSet;
 
 /*
 
     ID
-    JavaVersion
-    RunDirectory
-    Jar
-    Args
-
+    Working Directory
+    Program Stuff "java -jar server.jar" etc
  */
 
 
 public class ServerManager {
     private static final HashSet<LazyProcess> PROCESSES = new HashSet<>();
+    private static IServerManager serverManager;
 
 
     public static void registerProcess(LazyProcess process) {
@@ -36,15 +34,10 @@ public class ServerManager {
             PROCESSES.forEach(LazyProcess::forceStopProcess);
         }));
 
-        var window = new MyWindow();
-        window.setVisible(true);
-
-        var builder = new ProcessBuilder().directory(new File("E:\\server")).command("java", "-jar", "E:\\server\\server.jar");
-        var lazy = new LazyProcess(builder, "test");
-
-        registerProcess(lazy);
-
-        lazy.start();
-        System.out.println("Finished");
+        // setup server Manager variable
+        serverManager = new ServerManagerGUI();
+        PROCESSES.forEach(process -> serverManager.registerProcess(process));
+        serverManager.init();
+        serverManager.registerProcess(LazyProcess.MAIN);
     }
 }
