@@ -5,13 +5,24 @@ import org.mangorage.servermanager.utils.FireableArrayList;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ButtonListModel extends AbstractListModel<LazyProcess> {
     private final ArrayList<LazyProcess> LIST;
 
     public ButtonListModel(FireableArrayList<LazyProcess> list) {
         this.LIST = list;
-        list.register(a -> fireIntervalAdded(this, LIST.size() - 1, LIST.size() - 1));
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 0, 50);
+    }
+
+    public void update() {
+        fireIntervalAdded(this, LIST.size() - 1, LIST.size() - 1);
     }
 
     public void add(LazyProcess lazyProcess) {
