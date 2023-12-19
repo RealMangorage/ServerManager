@@ -32,10 +32,11 @@ public class Main {
         // setup server Manager variable
         serverManager = new ServerManager();
         serverManager.init();
-
-        var lp1 = LazyProcess.create("Server A", "E:\\servers\\a", "java -jar server.jar nogui");
-        var lp2 = LazyProcess.create("Server B", "E:\\servers\\b", "java -jar server.jar nogui");
-        serverManager.registerProcesses(lp1, lp2);
+        serverManager.registerProcesses(
+                LazyProcess.create("MC Server A", "E:\\servers\\a", "java -jar server.jar nogui"),
+                LazyProcess.create("MC Server B", "E:\\servers\\b", "java -jar server.jar nogui"),
+                LazyProcess.create("Factorio", "E:\\servers\\factorio", "E:\\servers\\Factorio\\bin\\x64\\factorio.exe --start-server-load-latest")
+        );
 
         SwingUtilities.invokeLater(() -> {
 

@@ -1,10 +1,14 @@
 package org.mangorage.servermanager.core;
 
 import org.mangorage.servermanager.core.process.LazyProcess;
-import org.mangorage.servermanager.utils.FireableArrayList;
+import org.mangorage.servermanager.utils.DirtyArrayList;
+import org.mangorage.servermanager.utils.DirtyList;
+
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ServerManager implements IServerManager {
-    private final FireableArrayList<LazyProcess> PROCESSES = new FireableArrayList<>();
+    private final DirtyList<LazyProcess> PROCESSES = DirtyArrayList.create(new CopyOnWriteArrayList<>());
 
     @Override
     public void registerProcess(LazyProcess process) {
@@ -13,12 +17,12 @@ public class ServerManager implements IServerManager {
 
     @Override
     public void unRegisterProcess(LazyProcess process) {
-
+        PROCESSES.remove(0);
     }
 
     @Override
     public void init() {
-        // Handle loading
+
     }
 
     @Override
@@ -27,7 +31,7 @@ public class ServerManager implements IServerManager {
     }
 
     @Override
-    public FireableArrayList<LazyProcess> getProcesses() {
+    public DirtyList<LazyProcess> getProcesses() {
         return PROCESSES;
     }
 }

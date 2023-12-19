@@ -1,8 +1,9 @@
 package org.mangorage.servermanager.core;
 
 import org.mangorage.servermanager.core.process.LazyProcess;
-import org.mangorage.servermanager.utils.FireableArrayList;
+import org.mangorage.servermanager.utils.DirtyList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public interface IServerManager {
@@ -19,5 +20,5 @@ public interface IServerManager {
     void unRegisterProcess(LazyProcess process);
     void init();
     void quit();
-    FireableArrayList<LazyProcess> getProcesses();
+    DirtyList<LazyProcess> getProcesses();
 }

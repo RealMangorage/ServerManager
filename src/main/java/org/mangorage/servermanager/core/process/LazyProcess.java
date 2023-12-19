@@ -23,11 +23,14 @@ public final class LazyProcess {
     private final String id;
     private final StringBuilder log = new StringBuilder();
     private Process runningProcess;
+    private boolean stopping = false;
     private IOutput output;
 
     private LazyProcess(ProcessBuilder builder, String id) {
         this.processBuilder = builder;
         this.id = id;
+
+        processBuilder.environment().put("java", "echo hello!");
     }
 
     public Process getRunningProcess() {
@@ -58,6 +61,7 @@ public final class LazyProcess {
 
                     runningProcess.waitFor();
                     runningProcess = null; // No longer running
+                    stopping = false; // Stopped
                 } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -87,12 +91,25 @@ public final class LazyProcess {
         this.output = Objects.requireNonNullElseGet(output, () -> s -> {});
     }
 
+    public void stopProcess() {
+        // Various methods to try and stop it
+        printInput("exit");
+        printInput("stop");
+    }
+
     public void forceStopProcess() {
         if (runningProcess != null && runningProcess.isAlive()) runningProcess.destroy();
     }
 
-    @Override
-    public String toString() {
-        return "ID: " + id + " Status: " + (runningProcess != null && runningProcess.isAlive() ? "running" : "dead");
+    public String getStatus() {
+        if (runningProcess != null) {
+            if (stopping) return "Stopping";
+            if (runningProcess.isAlive()) return "Running";
+        }
+        return "stopped";
+    }
+
+    public String getInfo() {
+        return "ID: " + id + " Status: " + getStatus();
     }
 }

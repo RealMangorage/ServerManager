@@ -1,15 +1,15 @@
 package org.mangorage.servermanager.gui;
 
 import org.mangorage.servermanager.core.process.LazyProcess;
-import org.mangorage.servermanager.utils.FireableArrayList;
+import org.mangorage.servermanager.utils.DirtyList;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class ButtonList extends JList<LazyProcess> {
     private final ButtonListModel MODEL;
 
-    public ButtonList(FireableArrayList<LazyProcess> arrayList) {
+    public ButtonList(DirtyList<LazyProcess> arrayList) {
         this.MODEL = new ButtonListModel(arrayList);
         setModel(MODEL);
     }

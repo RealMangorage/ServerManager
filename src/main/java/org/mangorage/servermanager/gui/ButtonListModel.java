@@ -1,28 +1,28 @@
 package org.mangorage.servermanager.gui;
 
 import org.mangorage.servermanager.core.process.LazyProcess;
-import org.mangorage.servermanager.utils.FireableArrayList;
+import org.mangorage.servermanager.utils.DirtyList;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.List;
 
 public class ButtonListModel extends AbstractListModel<LazyProcess> {
-    private final ArrayList<LazyProcess> LIST;
+    private final List<LazyProcess> LIST;
 
-    public ButtonListModel(FireableArrayList<LazyProcess> list) {
-        this.LIST = list;
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                update();
-            }
-        }, 0, 50);
+    @SuppressWarnings("unchecked")
+    public ButtonListModel(DirtyList<LazyProcess> list) {
+        this.LIST = list.getOriginal();
+        list.listen((a, b) -> {
+            update(b);
+        });
     }
 
-    public void update() {
-        fireIntervalAdded(this, LIST.size() - 1, LIST.size() - 1);
+    public void update(DirtyList.PropertyUpdate propertyUpdate) {
+        switch (propertyUpdate) {
+            case ADD -> fireIntervalAdded(this, LIST.size() - 1, LIST.size() - 1);
+            case REMOVE -> fireIntervalRemoved(this, LIST.size() - 1, LIST.size() - 1);
+            case NORMAL -> fireContentsChanged(this, LIST.size() - 1, LIST.size() - 1);
+        }
     }
 
     public void add(LazyProcess lazyProcess) {
